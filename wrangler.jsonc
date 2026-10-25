@@ -1,0 +1,10 @@
+{
+  // Deploys the static site in ./public with Cloudflare Workers static assets.
+  // Run: npx wrangler deploy
+  "name": "agecalculator",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  }
+}

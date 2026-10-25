@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Age Calculator – Find Your Exact Age in Years, Months and Days</title>
+  <meta name="description" content="Free age calculator. Enter your date of birth to see your exact age in years, months and days, plus total weeks, hours and seconds, and a countdown to your next birthday.">
+  <link rel="canonical" href="https://example.com/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Age Calculator – Your exact age, to the day">
+  <meta property="og:description" content="See your exact age in years, months and days, and how long until your next birthday.">
+  <meta name="theme-color" content="#2A45C2">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "How is my age calculated?", "acceptedAnswer": {"@type": "Answer", "text": "We count the full years since your birth date, then the full months after your last birthday, then the days left over. This is the same method used on official forms."}},
+      {"@type": "Question", "name": "What if I was born on 29 February?", "acceptedAnswer": {"@type": "Answer", "text": "In years without a 29 February, this calculator treats 28 February as your birthday."}},
+      {"@type": "Question", "name": "Is my date of birth stored?", "acceptedAnswer": {"@type": "Answer", "text": "No. The calculation runs in your browser and your date of birth is never sent to our server."}}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#calculator">Skip to the calculator</a>
+
+  <div class="ad-band">
+    <div class="ad ad--leaderboard" data-ad="top"></div>
+  </div>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="/" aria-label="Age Calculator home">
+        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="23" rx="4" fill="currentColor"/><rect x="3" y="6" width="26" height="7" rx="3" fill="var(--accent-deep)"/><rect x="9" y="2" width="3" height="8" rx="1.5" fill="currentColor"/><rect x="20" y="2" width="3" height="8" rx="1.5" fill="currentColor"/><path d="M16 17v5l3 2" stroke="var(--paper)" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+        <span>Age Calculator</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/" aria-current="page">Calculator</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="rail rail--left" aria-label="Advertisement">
+      <div class="rail__sticky">
+        <div class="ad ad--skyscraper" data-ad="railLeft"></div>
+      </div>
+    </aside>
+
+    <main class="main" id="main">
+      <section class="tool" id="calculator" aria-labelledby="tool-title">
+        <h1 id="tool-title">How old are you, exactly?</h1>
+        <p class="tool__lede">Enter your date of birth to see your age in years, months and days.</p>
+
+        <form class="age-form" id="age-form" novalidate>
+          <div class="field">
+            <label for="dob">Date of birth</label>
+            <input id="dob" name="dob" type="date" min="1900-01-01" required autocomplete="bday" aria-describedby="form-error">
+          </div>
+          <div class="field">
+            <label for="on-date">Age on</label>
+            <input id="on-date" name="on" type="date" min="1900-01-01" aria-describedby="on-hint">
+            <span class="field__hint" id="on-hint">Today, unless you change it</span>
+          </div>
+          <button class="button" type="submit">Calculate age</button>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+        </form>
+
+        <div class="result" id="results" hidden aria-live="polite">
+          <p class="result__intro" id="r-intro"></p>
+          <p class="readout" aria-describedby="r-intro">
+            <span class="readout__part"><span class="readout__num" id="r-years">0</span><span class="readout__unit" id="r-years-unit">years</span></span>
+            <span class="readout__part"><span class="readout__num" id="r-months">0</span><span class="readout__unit" id="r-months-unit">months</span></span>
+            <span class="readout__part"><span class="readout__num" id="r-days">0</span><span class="readout__unit" id="r-days-unit">days</span></span>
+          </p>
+          <p class="ticker"><span id="r-seconds">0</span> seconds old<span class="ticker__live" id="r-live"> and counting</span></p>
+
+          <div class="birthday" id="r-birthday"></div>
+
+          <dl class="totals">
+            <div><dt>Months</dt><dd id="t-months"></dd></div>
+            <div><dt>Weeks</dt><dd id="t-weeks"></dd></div>
+            <div><dt>Days</dt><dd id="t-days"></dd></div>
+            <div><dt>Hours</dt><dd id="t-hours"></dd></div>
+            <div><dt>Minutes</dt><dd id="t-minutes"></dd></div>
+            <div><dt>Born on a</dt><dd id="t-weekday"></dd></div>
+            <div><dt>Star sign</dt><dd id="t-zodiac"></dd></div>
+          </dl>
+
+          <button class="button button--quiet" type="button" id="copy-link">Copy link to this result</button>
+          <span class="copy-status" id="copy-status" role="status"></span>
+        </div>
+      </section>
+
+      <section class="ad-tiles" aria-label="Advertisements">
+        <div class="ad ad--tile" data-ad="tile1"></div>
+        <div class="ad ad--tile" data-ad="tile2"></div>
+        <div class="ad ad--tile" data-ad="tile3"></div>
+        <div class="ad ad--tile" data-ad="tile4"></div>
+      </section>
+
+      <article class="prose">
+        <h2>How your age is worked out</h2>
+        <p>The calculator counts the full years since your date of birth, then the full months since your last birthday, then the days left over. It's the same method you'd use on a passport or insurance form, so a person born on 14 May 1990 is 34 years, 0 months and 0 days old on 14 May 2024.</p>
+        <p>Months don't all have the same length, so the leftover days are counted from the same date in the previous month. If that date doesn't exist (say you were born on the 31st and the month only has 30 days), the last day of that month is used instead.</p>
+
+        <div class="ad ad--inarticle" data-ad="inArticle"></div>
+
+        <h2>Questions people ask</h2>
+        <details>
+          <summary>What if I was born on 29 February?</summary>
+          <p>In years without a 29 February, this calculator treats 28 February as your birthday. Some countries use 1 March for legal purposes, so check locally if it matters for a document.</p>
+        </details>
+        <details>
+          <summary>Why does the total in weeks look smaller than I expected?</summary>
+          <p>Weeks only count full seven-day blocks. The days that don't make up a whole week are left out of that number but still appear in the total days.</p>
+        </details>
+        <details>
+          <summary>Can I find out how old someone will be on a future date?</summary>
+          <p>Yes. Change the "Age on" date to any day in the future or the past and press Calculate age.</p>
+        </details>
+        <details>
+          <summary>Is my date of birth stored?</summary>
+          <p>No. The calculation runs in your browser and your date of birth is never sent to our server. If you copy a link to your result, the date is part of that link, so only share it with people you trust.</p>
+        </details>
+        <details>
+          <summary>Does the time zone change the result?</summary>
+          <p>Years, months and days use calendar dates only, so time zones don't affect them. The live seconds count assumes you were born at midnight in your current time zone.</p>
+        </details>
+      </article>
+    </main>
+
+    <aside class="rail rail--right" aria-label="Advertisements">
+      <div class="ad ad--rectangle" data-ad="sidebarTop"></div>
+      <div class="rail__sticky">
+        <div class="ad ad--halfpage" data-ad="sidebarSticky"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="ad-band ad-band--bottom">
+    <div class="ad ad--leaderboard" data-ad="bottom"></div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <p>Age Calculator. Free to use, no sign-up.</p>
+      <nav aria-label="Footer">
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy policy</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="/assets/js/ads-config.js"></script>
+  <script src="/assets/js/ads.js" defer></script>
+  <script src="/assets/js/calculator.js" defer></script>
+</body>
+</html>
