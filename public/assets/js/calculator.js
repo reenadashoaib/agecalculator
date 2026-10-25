@@ -17,7 +17,6 @@
 
   var dobInput = document.getElementById("dob");
   var onInput = document.getElementById("on-date");
-  var errorEl = document.getElementById("form-error");
   var results = document.getElementById("results");
   var numberFormat = new Intl.NumberFormat("en-US");
   var tickTimer = null;
@@ -92,22 +91,24 @@
     };
   }
 
-  function showError(message, input) {
-    errorEl.textContent = message;
-    errorEl.hidden = false;
-    dobInput.removeAttribute("aria-invalid");
-    onInput.removeAttribute("aria-invalid");
-    if (input) {
-      input.setAttribute("aria-invalid", "true");
-      input.focus();
-    }
+  function errorFor(input) { return $(input === dobInput ? "dob-error" : "on-error"); }
+
+  function showError(message, input, moveFocus) {
+    clearError();
+    var el = errorFor(input);
+    el.textContent = message;
+    el.hidden = false;
+    input.setAttribute("aria-invalid", "true");
+    if (moveFocus !== false) input.focus();
   }
 
   function clearError() {
-    errorEl.hidden = true;
-    errorEl.textContent = "";
-    dobInput.removeAttribute("aria-invalid");
-    onInput.removeAttribute("aria-invalid");
+    [dobInput, onInput].forEach(function (input) {
+      var el = errorFor(input);
+      el.hidden = true;
+      el.textContent = "";
+      input.removeAttribute("aria-invalid");
+    });
   }
 
   function secondsAlive(dob) {
@@ -137,19 +138,17 @@
     $("t-weekday").textContent = WEEKDAYS[dob.getUTCDay()];
     $("t-zodiac").textContent = zodiacSign(dob);
 
-    var heading, detail;
+    var countdown, label;
     if (r.isBirthday) {
-      heading = isToday ? "Happy birthday!" : "That's a birthday.";
-      detail = (isToday ? "You turn " + r.years + " today." : "Turning " + r.years + " that day.") +
-        " The next one is in " + fmt(r.daysToNext) + " days.";
+      countdown = isToday ? "Happy birthday! You turn " + r.years + " today." : "That's a birthday: turning " + r.years + ".";
+      label = "The next one is in " + fmt(r.daysToNext) + " days, on";
     } else {
-      heading = fmt(r.daysToNext) + " " + plural(r.daysToNext, "day") + " until you turn " + r.turning;
-      detail = "Your next birthday is on " + longDate(r.nextBirthday) + ".";
+      countdown = fmt(r.daysToNext) + " " + plural(r.daysToNext, "day") + " until you turn " + r.turning + ".";
+      label = "Next birthday";
     }
-    var birthday = $("r-birthday");
-    birthday.innerHTML = "<p><strong></strong></p><p></p>";
-    birthday.querySelector("strong").textContent = heading;
-    birthday.querySelectorAll("p")[1].textContent = detail;
+    $("r-countdown").textContent = countdown;
+    $("r-next-label").textContent = label;
+    $("r-next-date").textContent = longDate(r.nextBirthday);
 
     clearInterval(tickTimer);
     var seconds = $("r-seconds");
@@ -181,7 +180,7 @@
   function run(fromUser) {
     clearError();
     if (!dobInput.value) {
-      showError("Enter your date of birth.", fromUser ? dobInput : null);
+      showError("Enter your date of birth.", dobInput, fromUser);
       return;
     }
     var dob = parseDate(dobInput.value);
